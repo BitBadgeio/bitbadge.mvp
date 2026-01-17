@@ -19,9 +19,22 @@ export default function Home() {
   const [userCode, setUserCode] = useState('');
   const [output, setOutput] = useState('');
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
+  const [showNextButton, setShowNextButton] = useState(false);
 
   const currentTask: Task = tasks[currentTaskIndex] || tasks[0];
   const isCompleted = currentTaskIndex >= tasks.length;
+
+  const handleNextTask = () => {
+    const newIndex = currentTaskIndex + 1;
+    setCurrentTaskIndex(newIndex);
+    localStorage.setItem('bitbadgeProgress', JSON.stringify({ currentTask: newIndex }));
+    setShowNextButton(false);
+    setUserCode(tasks[newIndex]?.starterCode || '');
+    setOutput('');
+    if (newIndex >= tasks.length) {
+      setOutput('🏆 All tasks completed! You have finished the Bitbadge MVP.');
+    }
+  };
 
   useEffect(() => {
     const progress = JSON.parse(localStorage.getItem('bitbadgeProgress') || '{"currentTask": 0}');
@@ -103,16 +116,11 @@ output
       }
 
       if (allPassed) {
-        feedback += '\n🎉 All tests passed! Congratulations!';
-        // Update progress
-        const newIndex = currentTaskIndex + 1;
-        setCurrentTaskIndex(newIndex);
-        localStorage.setItem('bitbadgeProgress', JSON.stringify({ currentTask: newIndex }));
-        if (newIndex >= tasks.length) {
-          feedback += '\n🏆 All tasks completed! You have finished the Bitbadge MVP.';
-        }
+        feedback += '\n🎉 All tests passed! Click "Next Task" to continue.';
+        setShowNextButton(true);
       } else {
         feedback += '\n❌ Some tests failed. Try again.';
+        setShowNextButton(false);
       }
 
       setOutput(feedback);
@@ -133,21 +141,38 @@ output
           </div>
         ) : (
           <>
-            <TaskDescription task={currentTask} />
+            <div className="mt-4 flex justify-between">
+              <button
+                onClick={runCode}
+                disabled={loading || pyodideLoading || isCompleted}
+                className="px-6 py-2 bg-nord14 text-white rounded hover:bg-nord14/80 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {pyodideLoading ? 'Loading Pyodide...' : loading ? 'Running...' : 'Run Code'}
+              </button>
+              <button
+                onClick={() => {
+                  localStorage.removeItem('bitbadgeProgress');
+                  setCurrentTaskIndex(0);
+                  setUserCode(tasks[0].starterCode);
+                  setOutput('');
+                  setShowNextButton(false);
+                }}
+                className="px-6 py-2 bg-nord11 text-white rounded hover:bg-nord11/80"
+                aria-label="Reset progress and return to first task"
+              >
+                Reset Progress
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              <div>
-                <MonacoEditor value={userCode} onChange={setUserCode} />
-                <div className="mt-2 text-center">
-                  <button
-                    onClick={runCode}
-                    disabled={loading || pyodideLoading || isCompleted}
-                    className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {pyodideLoading ? 'Loading Pyodide...' : loading ? 'Running...' : 'Run Code'}
-                  </button>
-                </div>
-              </div>
-              <OutputConsole output={pyodideLoading ? 'Loading Pyodide...' : output} />
+              <MonacoEditor value={userCode} onChange={setUserCode} />
+              <TaskDescription task={currentTask} />
+            </div>
+            <div className="mt-4">
+              <OutputConsole
+                output={pyodideLoading ? 'Loading Pyodide...' : output}
+                showNextButton={showNextButton}
+                onNextTask={handleNextTask}
+              />
             </div>
           </>
         )}

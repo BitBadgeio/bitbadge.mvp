@@ -1,26 +1,63 @@
 @import "tailwindcss";
+@import "@fontsource/jetbrains-mono/400.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --nord0: #2e3440;
+  --nord1: #3b4252;
+  --nord2: #434c5e;
+  --nord3: #4c566a;
+  --nord4: #d8dee9;
+  --nord5: #e5e9f0;
+  --nord6: #eceff4;
+  --nord7: #8fbcbb;
+  --nord8: #88c0d0;
+  --nord9: #81a1c1;
+  --nord10: #5e81ac;
+  --nord11: #bf616a;
+  --nord12: #d08770;
+  --nord13: #ebcb8b;
+  --nord14: #a3be8c;
+  --nord15: #b48ead;
+  --background: var(--nord6);
+  --foreground: var(--nord0);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-nord0: var(--nord0);
+  --color-nord1: var(--nord1);
+  --color-nord2: var(--nord2);
+  --color-nord3: var(--nord3);
+  --color-nord4: var(--nord4);
+  --color-nord5: var(--nord5);
+  --color-nord6: var(--nord6);
+  --color-nord7: var(--nord7);
+  --color-nord8: var(--nord8);
+  --color-nord9: var(--nord9);
+  --color-nord10: var(--nord10);
+  --color-nord11: var(--nord11);
+  --color-nord12: var(--nord12);
+  --color-nord13: var(--nord13);
+  --color-nord14: var(--nord14);
+  --color-nord15: var(--nord15);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Monaco, Inconsolata, "Fira Code", "Droid Sans Mono", "Source Code Pro", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: var(--nord0);
+    --foreground: var(--nord4);
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-mono);
+}
+
+pre, code {
+  font-family: var(--font-mono), monospace;
 }

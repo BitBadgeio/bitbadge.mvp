@@ -7,7 +7,7 @@ interface MonacoEditorProps {
 
 export default function MonacoEditor({ value, onChange }: MonacoEditorProps) {
   return (
-    <div className="p-4 border rounded-lg bg-white dark:bg-gray-800">
+    <div className="p-4 bg-white dark:bg-gray-800">
       <h2 className="text-xl font-bold mb-2">Code Editor</h2>
       <Editor
         height="400px"
@@ -18,6 +18,7 @@ export default function MonacoEditor({ value, onChange }: MonacoEditorProps) {
         options={{
           minimap: { enabled: false },
           fontSize: 14,
+          fontFamily: 'JetBrains Mono, ui-monospace, SFMono-Regular, "SF Mono", Monaco, Inconsolata, "Fira Code", "Droid Sans Mono", "Source Code Pro", monospace',
         }}
       />
     </div>
